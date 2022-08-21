@@ -20,7 +20,7 @@ public class MemberRepositoryTest {
     @Test
     // Test가 끝난 후 db를 rollback한다.
     @Transactional
-    //@Rollback(value = false)
+//    @Rollback(value = false)
     public void testMember() throws Exception {
         // given
         Member member = new Member();
@@ -30,8 +30,7 @@ public class MemberRepositoryTest {
         Long saveId = memberRepository.save(member);
         Member findMember = memberRepository.find(saveId);
 
-        //then
-        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+        //Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
         Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
     }
 }
