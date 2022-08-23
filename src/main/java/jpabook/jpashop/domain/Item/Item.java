@@ -30,12 +30,12 @@ public abstract class Item {
 
     //==비지니스 로직 ==//
     //재고 수량 증가
-    private void addStock(int Quantity){
+    public void addStock(int Quantity){
         this.stockQuantity += Quantity;
     }
 
     //재고 수량 감소
-    private void removeStock(int Quantity){
+    public void removeStock(int Quantity){
         int restStock = this.stockQuantity - Quantity;
         if(restStock < 0){
             throw new NotEnoughStockException("need more stock");
