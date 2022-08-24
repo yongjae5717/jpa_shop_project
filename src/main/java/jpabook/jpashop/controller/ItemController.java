@@ -26,6 +26,14 @@ public class ItemController {
 
     @PostMapping("/items/new")
     public String create(BookForm form){
+        /** JPA가 관리를 하지 않는 준영속 엔티티!!
+         * 준영속 엔티티: 영속성 콘텍스트가 더는 관리하지 않는 엔티티
+         * 여기서 Book은 이미 DB에 한번 저장되어 식별자가 이미 존재한다.
+         * 이렇게 임의로 만들어낸 엔티티도 기존 식별자를 가지고 있으면 준영속 엔티티로 볼 수 있다.
+         * ** 준영속 엔티티 수정방법 **
+         * 1. 변경 감지 기능 사용 (dirty checking)
+         * 2. 병합("merge") 사용
+         */
         Book book = new Book();
         book.setName(form.getName());
         book.setPrice(form.getPrice());
@@ -63,7 +71,8 @@ public class ItemController {
     }
 
     @PostMapping("/items/{itemId}/edit")
-    public String updateItemForm(@ModelAttribute("form")BookForm form){
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute("form")BookForm form){
+        /** dirty checking으로 변경하기
         Book book = new Book();
         book.setId(form.getId());
         book.setName(form.getName());
@@ -71,8 +80,12 @@ public class ItemController {
         book.setStockQuantity(form.getStockQuantity());
         book.setAuthor(form.getAuthor());
         book.setIsbn(form.getIsbn());
-
         itemService.saveItem(book);
+        */
+
+        itemService.updateItem(itemId, form.getName(), form.getPrice(),
+                form.getStockQuantity());
         return "redirect:/items";
+
     }
 }
