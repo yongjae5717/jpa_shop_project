@@ -1,7 +1,8 @@
 package jpabook.jpashop.domain;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,20 +11,29 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class Member {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
     private String name;
 
+    // 값타입: 임베디드 타입
     @Embedded
     private Address address;
 
-    //mapping이 된 거울이된 느낌(읽기 전용)
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
+
+    public Member(String name, Address address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    public Member(String name) {
+        this.name = name;
+    }
 }

@@ -1,25 +1,48 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.*;
+
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class Delivery {
+
     @Id @GeneratedValue
-    @Column(name = "delevery_id")
+    @Column(name = "delivery_id")
     private Long id;
 
-    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToOne(mappedBy = "delivery", fetch = LAZY)
     private Order order;
 
     @Embedded
     private Address address;
 
     @Enumerated(EnumType.STRING)
-    private DeliveryStatus status; //(READY, COMP)
+    private DeliveryStatus status; //READY, COMP
 
+    public Delivery(Address address) {
+        this.address = address;
+    }
+
+    public Delivery(Order order, Address address, DeliveryStatus status) {
+        this.order = order;
+        this.address = address;
+        this.status = status;
+    }
+
+    public Delivery(Address address, DeliveryStatus status) {
+        this.address = address;
+        this.status = status;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 }
