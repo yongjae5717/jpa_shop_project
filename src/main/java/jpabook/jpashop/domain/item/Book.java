@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue("B")
 @Getter
 public class Book extends Item {
+    //update
     private String author;
     private String isbn;
 
@@ -19,4 +20,5 @@ public class Book extends Item {
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
+
 }
