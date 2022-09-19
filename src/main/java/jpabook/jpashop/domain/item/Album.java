@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 public class Album extends Item {
 
+    //test
     private String artist;
     private String etc;
 }
