@@ -1,5 +1,7 @@
 package jpabook.jpashop.repository;
 
+import jpabook.jpashop.api.orderSimpleApi.dto.OrderSimpleQueryDto;
+import jpabook.jpashop.api.orderSimpleApi.dto.SimpleOrderDto;
 import jpabook.jpashop.domain.Order;
 
 import org.springframework.stereotype.Repository;
@@ -96,5 +98,22 @@ public class OrderRepository {
         return query.getResultList();
     }
 
-}
+    // fetch join 사용해서 N+1 문제 해결
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
 
+    // 원하는 데이터만 선택함으로 애플리케이션 네트워크 용량 최적화 (생각보다 최적화에 미비한 영향)
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+        return em.createQuery(
+                "select new jpabook.jpashop.api.orderSimpleApi.dto.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+                        " from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d", OrderSimpleQueryDto.class
+        ).getResultList();
+    }
+}
