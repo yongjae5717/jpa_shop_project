@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    @NotEmpty
     private String name;
 
     // 값타입: 임베디드 타입
@@ -34,6 +36,10 @@ public class Member {
     }
 
     public Member(String name) {
+        this.name = name;
+    }
+
+    public void MemberSetName(String name) {
         this.name = name;
     }
 }
