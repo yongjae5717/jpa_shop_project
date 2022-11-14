@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jpabook.jpashop.api.dto.CreateMemberRequest;
 import jpabook.jpashop.api.dto.CreateMemberResponse;
+import jpabook.jpashop.api.dto.UpdateMemberRequest;
+import jpabook.jpashop.api.dto.UpdateMemberResponse;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +38,15 @@ public class MemberApiController {
         return new CreateMemberResponse(id);
     }
 
+    @Operation(description = "회원수정")
+    @PutMapping("/members/{id}")
+    public UpdateMemberResponse updateMember(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid UpdateMemberRequest request){
 
+        memberService.update(id, request.getName());
+        Member findMember = memberService.findOne(id);
 
-
+        return new UpdateMemberResponse(findMember.getId(), findMember.getName());
+    }
 }
