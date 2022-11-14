@@ -3,6 +3,7 @@ package jpabook.jpashop.api.orderSimpleApi.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jpabook.jpashop.api.orderSimpleApi.dto.OrderSimpleQueryDto;
 import jpabook.jpashop.api.orderSimpleApi.dto.SimpleOrderDto;
+import jpabook.jpashop.api.orderSimpleApi.repository.OrderSimpleQueryRepository;
 import jpabook.jpashop.common.Result;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.repository.OrderRepository;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     // N + 1 문제 발생
     @Operation(description = "간단한 주문 조회 v2 (N+1 문제 발생)")
@@ -54,7 +56,7 @@ public class OrderSimpleApiController {
     @Operation(description = "간단한 주문 조회 v4")
     @GetMapping("/v4/simple-orders")
     public Result ordersV4(){
-        List<OrderSimpleQueryDto> orders = orderRepository.findOrderDtos();
+        List<OrderSimpleQueryDto> orders = orderSimpleQueryRepository.findOrderDtos();
 
         return new Result(orders.size(), orders);
     }
