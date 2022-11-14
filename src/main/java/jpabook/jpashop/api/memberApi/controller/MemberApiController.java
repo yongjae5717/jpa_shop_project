@@ -1,8 +1,8 @@
-package jpabook.jpashop.api.controller;
+package jpabook.jpashop.api.memberApi.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jpabook.jpashop.api.dto.*;
+import jpabook.jpashop.api.memberApi.dto.*;
 import jpabook.jpashop.common.Result;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 public class MemberApiController {
     private final MemberService memberService;
 
-    @Operation(description = "회원가입v1")
+    @Operation(description = "회원가입 v1")
     @PostMapping("/v1/members")
     public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member){
         Long id = memberService.join(member);
         return new CreateMemberResponse(id);
     }
 
-    @Operation(description = "회원가입v2")
+    @Operation(description = "회원가입 v2")
     @PostMapping("/v2/members")
     public CreateMemberResponse saveMemberV2(@RequestBody @Valid CreateMemberRequest request){
         Member member = new Member();
@@ -50,13 +50,13 @@ public class MemberApiController {
         return new UpdateMemberResponse(findMember.getId(), findMember.getName());
     }
 
-    @Operation(description = "회원조회v1")
+    @Operation(description = "회원조회 v1")
     @GetMapping("/v1/members")
     public List<Member> memberV1(){
         return memberService.findMembers();
     }
 
-    @Operation(description = "회원조회v2")
+    @Operation(description = "회원조회 v2")
     @GetMapping("/v2/members")
     public Result memberV2(){
         List<Member> findMembers = memberService.findMembers();

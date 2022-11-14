@@ -1,4 +1,4 @@
-package jpabook.jpashop.api.dto;
+package jpabook.jpashop.api.memberApi.dto;
 
 import lombok.Data;
 
