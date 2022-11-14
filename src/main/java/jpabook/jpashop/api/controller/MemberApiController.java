@@ -2,10 +2,8 @@ package jpabook.jpashop.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jpabook.jpashop.api.dto.CreateMemberRequest;
-import jpabook.jpashop.api.dto.CreateMemberResponse;
-import jpabook.jpashop.api.dto.UpdateMemberRequest;
-import jpabook.jpashop.api.dto.UpdateMemberResponse;
+import jpabook.jpashop.api.dto.*;
+import jpabook.jpashop.common.Result;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "MemberApi")
 @RestController
@@ -48,5 +48,21 @@ public class MemberApiController {
         Member findMember = memberService.findOne(id);
 
         return new UpdateMemberResponse(findMember.getId(), findMember.getName());
+    }
+
+    @Operation(description = "회원조회v1")
+    @GetMapping("/v1/members")
+    public List<Member> memberV1(){
+        return memberService.findMembers();
+    }
+
+    @Operation(description = "회원조회v2")
+    @GetMapping("/v2/members")
+    public Result memberV2(){
+        List<Member> findMembers = memberService.findMembers();
+        List<MemberDto> collect = findMembers.stream()
+                .map(m -> new MemberDto(m.getName(), m.getAddress()))
+                .collect(Collectors.toList());
+        return new Result(collect.size(), collect);
     }
 }
