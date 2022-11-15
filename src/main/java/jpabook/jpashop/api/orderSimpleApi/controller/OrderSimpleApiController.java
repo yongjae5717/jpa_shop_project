@@ -1,6 +1,7 @@
 package jpabook.jpashop.api.orderSimpleApi.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jpabook.jpashop.api.orderSimpleApi.dto.OrderSimpleQueryDto;
 import jpabook.jpashop.api.orderSimpleApi.dto.SimpleOrderDto;
 import jpabook.jpashop.api.orderSimpleApi.repository.OrderSimpleQueryRepository;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  * Order -> Member
  * Order -> Delivery
  */
+@Tag(name = "OrderSimpleApi")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
