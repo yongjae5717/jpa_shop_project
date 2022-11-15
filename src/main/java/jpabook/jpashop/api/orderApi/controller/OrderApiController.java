@@ -32,4 +32,14 @@ public class OrderApiController {
                 .collect(Collectors.toList());
         return new Result(collect.size(), collect);
     }
+
+    @Operation(description = "주문 내역 조회 v3 (패치조인으로 최적화)")
+    @GetMapping("v3/orders")
+    public Result orderV3(){
+        List<Order> orders = orderRepository.findAllWithItem();
+        List<OrderDto> collect = orders.stream()
+                .map(o -> new OrderDto(o))
+                .collect(Collectors.toList());
+        return new Result(collect.size(), collect);
+    }
 }
