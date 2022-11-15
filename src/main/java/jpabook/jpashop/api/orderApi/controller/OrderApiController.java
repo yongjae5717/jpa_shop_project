@@ -3,7 +3,6 @@ package jpabook.jpashop.api.orderApi.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jpabook.jpashop.api.orderApi.dto.OrderDto;
-import jpabook.jpashop.api.orderApi.dto.OrderFlatDto;
 import jpabook.jpashop.api.orderApi.dto.OrderQueryDto;
 import jpabook.jpashop.api.orderApi.repository.OrderQueryRepository;
 import jpabook.jpashop.common.Result;

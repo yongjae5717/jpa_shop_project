@@ -25,6 +25,7 @@
 </details>
 
 ### SWAGGER
+> http://localhost:8080/swagger-ui/index.html
 <details>
 <summary>회원가입 API</summary>
 <div markdown="1">
@@ -73,6 +74,19 @@
 
 #### 간단한 주문 조회 응답
 ![](image/swagger/간단한주문조회응답.png)
+
+</div>
+</details>
+
+<details>
+<summary>주문 내역 조회 API</summary>
+<div markdown="1">
+
+#### 주문 내역 조회
+![](image/swagger/주문내역조회.png)
+
+#### 주문 내역 조회 응답
+![](image/swagger/주문내역조회응답.png)
 
 </div>
 </details>
