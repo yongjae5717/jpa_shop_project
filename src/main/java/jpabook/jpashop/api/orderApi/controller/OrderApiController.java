@@ -3,6 +3,7 @@ package jpabook.jpashop.api.orderApi.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jpabook.jpashop.api.orderApi.dto.OrderDto;
+import jpabook.jpashop.api.orderApi.dto.OrderFlatDto;
 import jpabook.jpashop.api.orderApi.dto.OrderQueryDto;
 import jpabook.jpashop.api.orderApi.repository.OrderQueryRepository;
 import jpabook.jpashop.common.Result;
@@ -81,5 +82,12 @@ public class OrderApiController {
     public Result ordersV5(){
         List<OrderQueryDto> allByDtoOptimization = orderQueryRepository.findAllByDtoOptimization();
         return new Result(allByDtoOptimization.size(), allByDtoOptimization);
+    }
+
+    @Operation(description = "주문 내역 조회 v6 (플랫 데이터 최적화)")
+    @GetMapping("/v6/orders")
+    public Result ordersV6(){
+        List<OrderQueryDto> flats = orderQueryRepository.findFlat();
+        return new Result(flats.size(), flats);
     }
 }

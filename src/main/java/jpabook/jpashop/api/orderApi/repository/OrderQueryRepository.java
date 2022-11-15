@@ -1,5 +1,6 @@
 package jpabook.jpashop.api.orderApi.repository;
 
+import jpabook.jpashop.api.orderApi.dto.OrderFlatDto;
 import jpabook.jpashop.api.orderApi.dto.OrderItemQueryDto;
 import jpabook.jpashop.api.orderApi.dto.OrderQueryDto;
 
@@ -10,6 +11,9 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 @Repository
 @RequiredArgsConstructor
@@ -77,14 +81,43 @@ public class OrderQueryRepository {
 
         // map이용해서 key, value 설정
         Map<Long, List<OrderItemQueryDto>> orderItemMap = orderItems.stream()
-                .collect(Collectors.groupingBy(OrderItemQueryDto::getOrderId));
+                .collect(groupingBy(OrderItemQueryDto::getOrderId));
         return orderItemMap;
     }
 
     private static List<Long> toOrderIds(List<OrderQueryDto> result) {
         List<Long> orderIds = result.stream()
                 .map(o -> o.getOrderId())
-                .collect(Collectors.toList());
+                .collect(toList());
         return orderIds;
     }
+
+    /**
+     * 플랫 데이터 최적화
+     * 쿼리는 1번이지만 조인으로 인해서 DB에서 애플리케이션에 전달하는 데이터의 중복 데이터가 추가되므로 상황에따라 V5보다 느릴 수 있다.
+     * 애플리케이션에서 추가 작업이 크다
+     * 페이징 불가능하다.
+     */
+    public List<OrderQueryDto> findFlat(){
+        List<OrderFlatDto> flats = findAllByDtoFlat();
+        List<OrderQueryDto> result = flats.stream()
+                .collect(groupingBy(o -> new OrderQueryDto(o.getOrderId(), o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
+                        mapping(o -> new OrderItemQueryDto(o.getOrderId(), o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
+                )).entrySet().stream()
+                .map(e -> new OrderQueryDto(e.getKey().getOrderId(), e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(), e.getKey().getAddress(), e.getValue()))
+                .collect(toList());
+        return result;
+    }
+
+    public List<OrderFlatDto> findAllByDtoFlat() {
+        return em.createQuery(
+                "select new jpabook.jpashop.api.orderApi.dto.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.orderPrice, oi.count)" +
+                        " from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d" +
+                        " join o.orderItems oi" +
+                        " join oi.item i", OrderFlatDto.class)
+                .getResultList();
+    }
+
 }
