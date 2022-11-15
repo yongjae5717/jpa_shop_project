@@ -3,10 +3,13 @@ package jpabook.jpashop.api.orderApi.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jpabook.jpashop.api.orderApi.dto.OrderDto;
+import jpabook.jpashop.api.orderApi.dto.OrderQueryDto;
+import jpabook.jpashop.api.orderApi.repository.OrderQueryRepository;
 import jpabook.jpashop.common.Result;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 public class OrderApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
     @Operation(description = "주문 내역 조회 v2 (엔티티를 DTO 변환)")
     @GetMapping("/v2/orders")
@@ -36,7 +40,7 @@ public class OrderApiController {
 
     @Operation(description = "주문 내역 조회 v3 (패치조인으로 최적화)")
     @GetMapping("/v3/orders")
-    public Result orderV3(){
+    public Result ordersV3(){
         List<Order> orders = orderRepository.findAllWithItem();
         List<OrderDto> collect = orders.stream()
                 .map(o -> new OrderDto(o))
@@ -54,7 +58,7 @@ public class OrderApiController {
      */
     @Operation(description = "주문 내역 조회 v3.1 (페이징문제 해결) -> default_batch_fetch_size 설정")
     @GetMapping("/v3.1/orders")
-    public Result orderV3Page(
+    public Result ordersV3Page(
             @RequestParam(value = "offset", defaultValue = "0") int offset,
             @RequestParam(value = "limit", defaultValue = "100") int limit){
         List<Order> orders = orderRepository.findAllWithMemberDeliveryV2(offset, limit);
@@ -63,5 +67,19 @@ public class OrderApiController {
                 .map(o -> new OrderDto(o))
                 .collect(Collectors.toList());
         return new Result(collect.size(), collect);
+    }
+
+    @Operation(description = "주문 내역 조회 v4 (JPA에서 DTO 직접 조회) -> 컬렉션 조회 시 N+1 문제 발생")
+    @GetMapping("/v4/orders")
+    public Result ordersV4(){
+        List<OrderQueryDto> orderQueryDtos = orderQueryRepository.findOrderQueryDtos();
+        return new Result(orderQueryDtos.size(), orderQueryDtos);
+    }
+
+    @Operation(description = "주문 내역 조회 v5 (컬렉션 조회 최적화) -> N+1 문제 해결")
+    @GetMapping("/v5/orders")
+    public Result ordersV5(){
+        List<OrderQueryDto> allByDtoOptimization = orderQueryRepository.findAllByDtoOptimization();
+        return new Result(allByDtoOptimization.size(), allByDtoOptimization);
     }
 }
