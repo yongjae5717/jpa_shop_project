@@ -1,7 +1,5 @@
 package jpabook.jpashop.repository;
 
-import jpabook.jpashop.api.orderSimpleApi.dto.OrderSimpleQueryDto;
-import jpabook.jpashop.api.orderSimpleApi.dto.SimpleOrderDto;
 import jpabook.jpashop.domain.Order;
 
 import org.springframework.stereotype.Repository;
@@ -107,7 +105,7 @@ public class OrderRepository {
         ).getResultList();
     }
 
-    // 주문조회 fetch join사용
+    // 주문조회 fetch join사용 (페이징 문제 발생)
     public List<Order> findAllWithItem(){
         return em.createQuery(
                 "select distinct o from Order o" +
@@ -115,6 +113,18 @@ public class OrderRepository {
                         " join fetch o.delivery d" +
                         " join fetch o.orderItems oi" +
                         " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
+
+    // 주문조회 페이징문제 해결 (쿼리 호출 수가 1 + N -> 1 + 1로 최적화된다.)
+    public List<Order> findAllWithMemberDeliveryV2(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        )
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
     }
 }
