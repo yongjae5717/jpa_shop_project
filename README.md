@@ -93,3 +93,4 @@
 
 ### reference
 * [OSIV](https://github.com/yongjae5717/jpa_shop_project/blob/main/readmeFiles/OSIV.md)
+* [QueryDsl](https://github.com/yongjae5717/jpa_shop_project/blob/main/readmeFiles/QueryDsl.md)
