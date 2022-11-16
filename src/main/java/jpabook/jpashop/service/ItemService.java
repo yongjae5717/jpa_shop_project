@@ -5,6 +5,7 @@ import jpabook.jpashop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ItemService {
 
     @Transactional
     public void updateItem(Long itemId, String name, int price, int stockQuantity) {
-        Item item = itemRepository.findOne(itemId);
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Invalid Item Id"));
         item.setName(name);
         item.setPrice(price);
         item.setStockQuantity(stockQuantity);
@@ -33,7 +34,7 @@ public class ItemService {
     }
 
     public Item findOne(Long itemId) {
-        return itemRepository.findOne(itemId);
+        return itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Invalid Item Id"));
     }
 
 }

@@ -5,6 +5,7 @@ import jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 
@@ -39,12 +40,12 @@ public class MemberService {
     }
 
     public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException("Invalid member Id"));
     }
 
     @Transactional
     public void update(Long id, String name) {
-        Member member = memberRepository.findOne(id);
+        Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Invalid member Id"));
         member.MemberSetName(name);
     }
 }
